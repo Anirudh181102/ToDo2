@@ -1,9 +1,16 @@
 const mongoose = require('mongoose');
-mongoose.connect("mongodb://127.0.0.1:27017/todo");
 
-const userSchema = new mongoose.Schema({
-    task: String,
-    done: Boolean
-})
+// Define the task schema
+const taskSchema = new mongoose.Schema({
+    task: {
+        type: String,
+        required: true
+    },
+    done: {
+        type: Boolean,
+        default: false
+    }
+});
 
-module.exports=mongoose.model('task', userSchema);
+// Export the task model
+module.exports = mongoose.model('task', taskSchema);

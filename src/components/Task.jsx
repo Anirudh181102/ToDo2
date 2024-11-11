@@ -1,16 +1,25 @@
 import React, { useState } from "react";
+import axios from "axios"; // Import axios for making HTTP requests
 
 const Task = (props) => {
-  const [isDone, setIsDone] = useState(false);
+  const [isDone, setIsDone] = useState(props.isDone || false); // Initialize state with props.isDone
 
-  const handleClick = () => {
-    setIsDone(!isDone);
-    
+  // Function to toggle task completion
+  const handleClick = async () => {
+    try {
+      const updatedTask = { ...props, done: !isDone }; // Create updated task data
+      await axios.put(`http://localhost:3000/tasks/${props.id}`, updatedTask); // Update task in the server
+      setIsDone(!isDone); // Toggle the local state
+      // console.log(props.color);
+    } catch (error) {
+      console.error("Error updating task:", error);
+    }
   };
 
   return (
     <div
-      className={`relative p-4 pb-12 ${props.color} border border-gray-200 rounded-lg shadow dark:border-gray-700 transition-all`} // Added props.color for dynamic background color
+      className={`relative p-4 pb-12 ${props.color} border border-gray-200 rounded-lg shadow transition-all`}
+      
       style={{ width: "390px" }}
     >
       <a
@@ -18,17 +27,17 @@ const Task = (props) => {
         className={`block ${isDone ? "line-through" : ""}`}
         onClick={handleClick}
       >
-        <h6 className="text-2xl tracking-tight text-white dark:text-white">
+        <h6 className="text-2xl tracking-tight text-black">
           {props.desc}
         </h6>
       </a>
       <button
         type="button"
-        className="absolute bottom-2 right-2 text-white bg-red-500 hover:bg-red-400 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        className="absolute bottom-2 right-2 text-white bg-red-500 hover:bg-red-400 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center"
         onClick={props.del}
       >
         <svg
-          className="w-6 h-6 text-white dark:text-white"
+          className="w-6 h-6"
           aria-hidden="true"
           xmlns="http://www.w3.org/2000/svg"
           width="24"
